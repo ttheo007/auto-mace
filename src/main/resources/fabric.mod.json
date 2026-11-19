@@ -3,12 +3,16 @@
 	"id": "ominous-heavy-core",
 	"version": "${version}",
 	"name": "Ominous Heavy Core",
-	"description": "Jeder Ominous Vault gibt immer einen Heavy Core. Nur Client-seitig installiert, funktioniert in Einzelspieler-Welten.",
+	"description": "Klickt automatisch mit dem Ominous Trial Key, sobald der Ominous Vault einen Heavy Core anzeigt. Nur Client.",
 	"authors": ["tt"],
 	"license": "MIT",
 	"environment": "client",
+	"entrypoints": {
+		"client": ["de.tt.ominousheavycore.OminousHeavyCoreClient"]
+	},
 	"depends": {
 		"fabricloader": ">=0.19.5",
-		"minecraft": "~26.3"
+		"minecraft": "~26.3",
+		"fabric-api": "*"
 	}
 }

@@ -1,11 +1,9 @@
-# Ominous Heavy Core (Fabric 26.3)
+# Ominous Heavy Core (Fabric 26.3, nur Client)
 
-Jeder Ominous Vault (Trial Chambers) gibt **immer einen Heavy Core**.
+Haelt du einen **Ominous Trial Key** in der Hand und schaust auf einen **Ominous Vault**, der gerade
+einen **Heavy Core** anzeigt, klickt die Mod automatisch (Rechtsklick, 10 Ticks Pause).
 
-- Reiner Client-Mod (`"environment": "client"`), kein Server nötig.
-- Funktioniert nur in **Einzelspieler-/eigenen LAN-Welten**: Dort läuft der Server im selben Prozess und liest die Loot-Tabelle aus der Mod.
-- Auf fremden Servern hat der Client keinen Einfluss auf den Loot (und das wäre dort auch ein Exploit).
-- Umsetzung per Datenpaket: `data/minecraft/loot_table/chests/trial_chambers/reward_ominous.json` überschreibt die Vanilla-Tabelle.
-
-## Bauen
-`gradle build` (Gradle 9.7.1) -> `build/libs/ominous-heavy-core-1.0.0.jar` (JDK 25), oder über GitHub Actions (Artifacts).
+- Reiner Client-Mod, braucht Fabric API.
+- Hinweis: Ob das angezeigte Item auch die Beute ist, bestimmt der Server. In Vanilla ist das nicht
+  garantiert. Automatisches Klicken kann auf Servern verboten sein, Serverregeln beachten.
+- Bauen: `gradle build` (Gradle 9.7.1, JDK 25) oder GitHub Actions (Artifacts).
