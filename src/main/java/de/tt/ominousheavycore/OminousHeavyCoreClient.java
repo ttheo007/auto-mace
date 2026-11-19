@@ -15,22 +15,15 @@ import net.minecraft.world.phys.HitResult;
 
 /**
  * Client-Mod: Haelt der Spieler einen Ominous Trial Key und schaut auf einen Ominous Vault,
- * der gerade einen Heavy Core anzeigt, wird automatisch Rechtsklick ausgeloest.
+ * der gerade einen Heavy Core anzeigt, wird automatisch Rechtsklick ausgeloest (Pruefung jeden Tick, nur mit Key in der Haupthand).
  */
 public class OminousHeavyCoreClient implements ClientModInitializer {
-	private static final int COOLDOWN_TICKS = 10;
-	private int cooldown = 0;
-
 	@Override
 	public void onInitializeClient() {
 		ClientTickEvents.END_CLIENT_TICK.register(this::tick);
 	}
 
 	private void tick(Minecraft client) {
-		if (cooldown > 0) {
-			cooldown--;
-			return;
-		}
 		if (client.player == null || client.level == null || client.gameMode == null || !client.mouseHandler.isMouseGrabbed()) {
 			return;
 		}
@@ -54,6 +47,5 @@ public class OminousHeavyCoreClient implements ClientModInitializer {
 		}
 
 		client.gameMode.useItemOn(client.player, InteractionHand.MAIN_HAND, hit);
-		cooldown = COOLDOWN_TICKS;
 	}
 }

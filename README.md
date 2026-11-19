@@ -1,7 +1,7 @@
 # Ominous Heavy Core (Fabric 26.3, nur Client)
 
 Haelt du einen **Ominous Trial Key** in der Hand und schaust auf einen **Ominous Vault**, der gerade
-einen **Heavy Core** anzeigt, klickt die Mod automatisch (Rechtsklick, 10 Ticks Pause).
+einen **Heavy Core** anzeigt, klickt die Mod automatisch (Rechtsklick, Pruefung jeden Tick).
 
 - Reiner Client-Mod, braucht Fabric API.
 - Hinweis: Ob das angezeigte Item auch die Beute ist, bestimmt der Server. In Vanilla ist das nicht
