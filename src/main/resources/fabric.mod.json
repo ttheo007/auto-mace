@@ -1,0 +1,14 @@
+{
+	"schemaVersion": 1,
+	"id": "ominous-heavy-core",
+	"version": "${version}",
+	"name": "Ominous Heavy Core",
+	"description": "Jeder Ominous Vault gibt immer einen Heavy Core. Nur Client-seitig installiert, funktioniert in Einzelspieler-Welten.",
+	"authors": ["tt"],
+	"license": "MIT",
+	"environment": "client",
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3"
+	}
+}
