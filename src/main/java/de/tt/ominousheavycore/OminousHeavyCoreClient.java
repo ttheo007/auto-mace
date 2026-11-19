@@ -31,7 +31,7 @@ public class OminousHeavyCoreClient implements ClientModInitializer {
 			cooldown--;
 			return;
 		}
-		if (client.player == null || client.level == null || client.gameMode == null || client.screen != null) {
+		if (client.player == null || client.level == null || client.gameMode == null || !client.mouseHandler.isMouseGrabbed()) {
 			return;
 		}
 		if (!client.player.getMainHandItem().is(Items.OMINOUS_TRIAL_KEY)) {
@@ -54,7 +54,6 @@ public class OminousHeavyCoreClient implements ClientModInitializer {
 		}
 
 		client.gameMode.useItemOn(client.player, InteractionHand.MAIN_HAND, hit);
-		client.player.swing(InteractionHand.MAIN_HAND);
 		cooldown = COOLDOWN_TICKS;
 	}
 }
