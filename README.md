@@ -4,6 +4,10 @@ Haelt du einen **Ominous Trial Key** in der Hand und schaust auf einen **Ominous
 ein Item aus deiner Liste anzeigt, klickt die Mod automatisch (Rechtsklick, Pruefung jeden Tick).
 
 ## Einstellen, bei welchem Item geklickt wird
+Im Spiel mit der Taste **V** (aenderbar unter Steuerung -> Ominous Heavy Core): Items per Klick an/aus.
+
+Oder per Datei:
+
 Datei `config/ominous-heavy-core.json` (wird beim ersten Start angelegt):
 
 ```json

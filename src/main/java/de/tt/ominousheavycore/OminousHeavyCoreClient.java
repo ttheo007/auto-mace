@@ -1,14 +1,14 @@
 package de.tt.ominousheavycore;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,67 +19,41 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-
 /**
  * Client-Mod: Haelt der Spieler einen Ominous Trial Key und schaut auf einen Ominous Vault,
- * der gerade ein Item aus der Liste (config/ominous-heavy-core.json) anzeigt, wird automatisch
- * Rechtsklick ausgeloest. Geprueft wird jeden Tick, aber nur mit Key in der Haupthand.
- * Die Config wird alle 20 Ticks neu eingelesen, wenn sich die Datei geaendert hat.
+ * der gerade ein ausgewaehltes Item anzeigt, wird automatisch Rechtsklick ausgeloest.
+ * Geprueft wird jeden Tick, aber nur mit Key in der Haupthand. Auswahl: Taste V oder config-Datei.
  */
 public class OminousHeavyCoreClient implements ClientModInitializer {
-	private static final String DEFAULT_CONFIG = """
-			{
-			  "items": ["minecraft:heavy_core"]
-			}
-			""";
+	private static final String MOD_ID = "ominous-heavy-core";
 
-	private Path configFile;
-	private Set<String> targets = Set.of("minecraft:heavy_core");
-	private long lastModified = -1;
+	private KeyMapping openConfigKey;
 	private int reloadTimer = 0;
 
 	@Override
 	public void onInitializeClient() {
-		configFile = FabricLoader.getInstance().getConfigDir().resolve("ominous-heavy-core.json");
-		loadConfig();
+		ModConfig.init();
+
+		KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "main"));
+		openConfigKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+				"key." + MOD_ID + ".open_config",
+				InputConstants.Type.KEYSYM,
+				InputConstants.KEY_V,
+				category));
+
 		ClientTickEvents.END_CLIENT_TICK.register(this::tick);
-	}
-
-	private void loadConfig() {
-		try {
-			if (!Files.exists(configFile)) {
-				Files.writeString(configFile, DEFAULT_CONFIG);
-			}
-			long modified = Files.getLastModifiedTime(configFile).toMillis();
-			if (modified == lastModified) {
-				return;
-			}
-			lastModified = modified;
-
-			JsonObject root = JsonParser.parseString(Files.readString(configFile)).getAsJsonObject();
-			Set<String> set = new HashSet<>();
-			for (JsonElement element : root.getAsJsonArray("items")) {
-				String id = element.getAsString().trim().toLowerCase(Locale.ROOT);
-				if (!id.contains(":")) {
-					id = "minecraft:" + id;
-				}
-				set.add(id);
-			}
-			targets = set;
-		} catch (Exception ignored) {
-			// Bei Fehlern (z.B. kaputtes JSON) bleibt die letzte funktionierende Liste aktiv.
-		}
 	}
 
 	private void tick(Minecraft client) {
 		if (++reloadTimer >= 20) {
 			reloadTimer = 0;
-			loadConfig();
+			ModConfig.load();
+		}
+
+		while (openConfigKey.consumeClick()) {
+			if (client.player != null) {
+				client.setScreen(new ConfigScreen());
+			}
 		}
 
 		if (client.player == null || client.level == null || client.gameMode == null || !client.mouseHandler.isMouseGrabbed()) {
@@ -103,7 +77,7 @@ public class OminousHeavyCoreClient implements ClientModInitializer {
 
 		ItemStack shown = vault.getSharedData().getDisplayItem();
 		String shownId = BuiltInRegistries.ITEM.getKey(shown.getItem()).toString();
-		if (!targets.contains(shownId)) {
+		if (!ModConfig.isEnabled(shownId)) {
 			return;
 		}
 
