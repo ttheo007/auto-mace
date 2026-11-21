@@ -37,7 +37,7 @@ public class OminousHeavyCoreClient implements ClientModInitializer {
 		KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "main"));
 		openConfigKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key." + MOD_ID + ".open_config",
-				InputConstants.Type.KEYSYM,
+				InputConstants.Type.KEYBOARD,
 				InputConstants.KEY_V,
 				category));
 
@@ -52,7 +52,7 @@ public class OminousHeavyCoreClient implements ClientModInitializer {
 
 		while (openConfigKey.consumeClick()) {
 			if (client.player != null) {
-				client.setScreen(new ConfigScreen());
+				client.gui.setScreen(new ConfigScreen());
 			}
 		}
 
